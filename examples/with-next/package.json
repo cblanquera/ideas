@@ -1,0 +1,43 @@
+{
+  "name": "with-next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "transform": "idea -i ./schema.idea",
+    "push": "dotenv -e .env.local -- drizzle-kit push:pg",
+    "migrate": "dotenv -e .env.local -- drizzle-kit generate:pg"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "0.9.0",
+    "@paralleldrive/cuid2": "2.2.2",
+    "@planetscale/database": "1.16.0",
+    "@vercel/postgres": "0.7.2",
+    "better-sqlite3": "9.4.3",
+    "mysql2": "3.9.2",
+    "next": "14.1.0",
+    "postgres": "3.4.4",
+    "pg": "8.11.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@ossph/idea": "0.1.2",
+    "@types/better-sqlite3": "7.6.9",
+    "@types/node": "20.11.16",
+    "@types/react": "18.2.51",
+    "@types/react-dom": "18.2.18",
+    "autoprefixer": "10.4.17",
+    "dotenv-cli": "7.3.0",
+    "drizzle-kit": "0.20.14",
+    "eslint": "8.56.0",
+    "eslint-config-next": "14.1.0",
+    "postcss": "8.4.33",
+    "tailwindcss": "3.4.1",
+    "ts-node": "10.9.2",
+    "typescript": "5.3.3"
+  }
+}

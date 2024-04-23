@@ -1,0 +1,25 @@
+{
+  "name": "@blanquera/idea-drizzle",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Idea transformer to Drizzle",
+  "author": "Chris <chris@incept.asia>",
+  "homepage": "https://github.com/cblanquera/ideas",
+  "bugs": "https://github.com/cblanquera/ideas/issues",
+  "repository": "cblanquera/ideas",
+  "scripts": {
+    "build": "tsc"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "@blanquera/idea-map": "0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.16",
+    "eslint": "8.56.0",
+    "eslint-config-next": "14.1.0",
+    "ts-morph": "18.0.0",
+    "ts-node": "10.9.2",
+    "typescript": "5.3.3"
+  }
+}
