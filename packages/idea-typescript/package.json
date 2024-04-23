@@ -16,8 +16,6 @@
   },
   "devDependencies": {
     "@types/node": "20.11.16",
-    "eslint": "8.56.0",
-    "eslint-config-next": "14.1.0",
     "ts-morph": "18.0.0",
     "ts-node": "10.9.2",
     "typescript": "5.3.3"

@@ -6,8 +6,7 @@ export type {
 }
 
 import Enum from './Enum';
-import Prop from './Prop';
-import {Column, Fieldset, Model} from './Model';
+import { Column, Fieldset, Model } from './Model';
 
 import { 
   lowerize, 
@@ -18,7 +17,6 @@ import {
 
 export {
   Enum,
-  Prop,
   Fieldset,
   Model,
   Column,

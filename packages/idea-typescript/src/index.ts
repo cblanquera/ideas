@@ -1,5 +1,5 @@
 //types
-import type { PluginProps } from '@ossph/idea';
+import type { PluginWithCLIProps } from '@ossph/idea';
 //project
 import path from 'path';
 import { Project, SourceFile, IndentationText } from 'ts-morph';
@@ -28,7 +28,7 @@ import generateFieldset from './generate/fieldset';
 /**
  * This is the The params comes form the cli
  */
-export default function generate({ config, schema, cli }: PluginProps) {
+export default function generate({ config, schema, cli }: PluginWithCLIProps) {
   if (!schema.model) {
     return cli.terminal.error('No models found in schema');
   }

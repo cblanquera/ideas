@@ -148,7 +148,7 @@ export class Column {
       return { method, args, attributes };
     }
     return { 
-      method: 'hide', 
+      method: 'none', 
       args: [],
       attributes: {}
     };
@@ -317,7 +317,7 @@ export class Column {
    * Returns true if column is @spanable
    */
   public get spanable() {
-    return this._config.attributes.spannable === true;
+    return this._config.attributes.spanable === true;
   }
 
   /**
@@ -437,7 +437,7 @@ export class Column {
       return { method, args, attributes };
     }
     return { 
-      method: 'hide', 
+      method: 'none', 
       args: [],
       attributes: {}
     };
@@ -640,7 +640,7 @@ export class Fieldset {
    * Returns a column given the name
    */
   public column(name: string) {
-    return this.columns.find(column => column.name === name);
+    return this.columns.find(column => column.name === name) || null;
   }
 
   /**
@@ -684,13 +684,6 @@ export class Model extends Fieldset {
   }
 
   /**
-   * Returns the column that will be stamped when @created
-   */
-  public get created() {
-    return this.columns.find(column => column.attributes.created === true);
-  }
-
-  /**
    * Gets a config from the cache
    */
   public static get(name: string) {
@@ -702,6 +695,13 @@ export class Model extends Fieldset {
    */
   public static has(name: string) {
     return typeof this._configs[name] !== 'undefined';
+  }
+
+  /**
+   * Returns the column that will be stamped when @created
+   */
+  public get created() {
+    return this.columns.find(column => column.attributes.created === true);
   }
 
   /**
@@ -780,20 +780,6 @@ export class Model extends Fieldset {
   }
 
   /**
-   * Returns a function to generate a suggested label
-   */
-  public get suggested() {
-    const suggested = (
-      this.attributes.suggested as string[]
-    )[0] || this.lower;
-    return (template = '${data.%s}') => Array.from(
-      suggested.matchAll(/\[([a-zA-Z0-9_]+)\]/g)
-    ).reduce((result, match) => {
-      return result.replace(match[0], template.replaceAll('%s', match[1]));
-    }, suggested)
-  }
-
-  /**
    * Returns all the unique columns
    */
   public get uniques() {
@@ -805,5 +791,19 @@ export class Model extends Fieldset {
    */
   public get updated() {
     return this.columns.find(column => column.attributes.updated === true);
+  }
+
+  /**
+   * Returns a function to generate a suggested label
+   */
+  public suggested(template = '${data.%s}') {
+    const suggested = (
+      this.attributes.suggested as string[]
+    )[0] || this.lower;
+    return Array.from(
+      suggested.matchAll(/\[([a-zA-Z0-9_]+)\]/g)
+    ).reduce((result, match) => {
+      return result.replace(match[0], template.replaceAll('%s', match[1]));
+    }, suggested);
   }
 }
