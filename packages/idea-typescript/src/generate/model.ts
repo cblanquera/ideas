@@ -1,9 +1,9 @@
 //types
-import type { ColumnRelationLink } from '@blanquera/idea-map';
+import type { ColumnRelationLink } from '@blanquera/idea-spec';
 //project
 import path from 'path';
 import { SourceFile } from 'ts-morph';
-import { Model, Fieldset } from '@blanquera/idea-map';
+import { Model, Fieldset } from '@blanquera/idea-spec';
 //helpers
 import { map, formatCode } from '../helpers';
 

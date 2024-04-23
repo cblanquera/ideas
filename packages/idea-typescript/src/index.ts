@@ -4,7 +4,7 @@ import type { PluginProps } from '@ossph/idea';
 import path from 'path';
 import { Project, SourceFile, IndentationText } from 'ts-morph';
 import { Loader } from '@ossph/idea';
-import { Model, Fieldset, Enum, deconstruct } from '@blanquera/idea-map';
+import { Model, Fieldset, Enum, deconstruct } from '@blanquera/idea-spec';
 //generators
 import generateModel from './generate/model';
 import generateFieldset from './generate/fieldset';

@@ -12,7 +12,7 @@
   },
   "main": "index.js",
   "dependencies": {
-    "@blanquera/idea-map": "0.1.0"
+    "@blanquera/idea-spec": "0.1.0"
   },
   "devDependencies": {
     "@types/node": "20.11.16",

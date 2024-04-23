@@ -1,7 +1,7 @@
 //project
 import path from 'path';
 import { SourceFile } from 'ts-morph';
-import { Fieldset } from '@blanquera/idea-map';
+import { Fieldset } from '@blanquera/idea-spec';
 //helpers
 import { map, formatCode } from '../helpers';
 
