@@ -1,6 +1,7 @@
 plugin "@blanquera/idea-typescript" {
   lang "ts"
-  output "./modules/[name]/types.ts"
+  enums "./modules/enums.ts"
+  types "./modules/[name]/types.ts"
 }
 
 //--------------------------------------------------------------------//

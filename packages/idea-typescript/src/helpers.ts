@@ -1,3 +1,5 @@
+import path from 'path';
+
 export const map: Record<string, string> = {
   String: 'string',
   Text: 'string',
@@ -12,6 +14,17 @@ export const map: Record<string, string> = {
   Object: 'Record<string, string|number|boolean|null>',
   Hash: 'Record<string, string|number|boolean|null>'
 };
+
+/**
+ * Returns the relative path from source file to importing file
+ */
+export function relativeImport(source: string, importing: string): string {
+  const extname = path.extname(importing);
+  if (extname.length) {
+    importing = importing.substring(0, importing.length - extname.length);
+  }
+  return path.relative(path.dirname(source), importing);
+}
 
 /**
  * A simple code formatter

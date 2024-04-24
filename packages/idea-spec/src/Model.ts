@@ -2,6 +2,7 @@
 import type { Data, TypeConfig, ModelConfig, ColumnConfig } from '@ossph/idea';
 //helpers
 import { Exception } from '@ossph/idea';
+import Enum from './Enum';
 import { camelize, capitalize, toValidator } from './helpers';
 
 export type ColumnRelation = { 
@@ -53,6 +54,13 @@ export class Column {
       return this._config.attributes.default[0];
     }
     return undefined;
+  }
+
+  /**
+   * Returns enum if type is an enum
+   */
+  public get enum() {
+    return Enum.has(this.type) ? Enum.get(this.type) : null;
   }
 
   /**
@@ -524,6 +532,13 @@ export class Fieldset {
    */
   public get columns() {
     return this._columns;
+  }
+
+  /**
+   * Returns all the enum columns
+   */
+  public get enums() {
+    return this.columns.filter(column => column.enum !== null);
   }
 
   /**

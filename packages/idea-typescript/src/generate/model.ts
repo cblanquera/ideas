@@ -1,11 +1,10 @@
 //types
 import type { ColumnRelationLink } from '@blanquera/idea-spec';
 //project
-import path from 'path';
 import { SourceFile } from 'ts-morph';
 import { Model, Fieldset } from '@blanquera/idea-spec';
 //helpers
-import { map, formatCode } from '../helpers';
+import { map, relativeImport, formatCode } from '../helpers';
 
 /**
  * Generate model types
@@ -13,28 +12,25 @@ import { map, formatCode } from '../helpers';
 export default function generateModel(
   source: SourceFile, 
   model: Model, 
-  destination: string
+  destination: string,
+  enums?: string
 ) {
+  const imported: string[] = [];
   //if split files, we should import
   if (destination.includes('[name]')) {
-    const imported: string[] = [];
     //loop through the relation
     model.relations.forEach(column => {
       if (imported.includes(column.type)) return;
       imported.push(column.type);
+      //get relation so we can import the parent model
       const relation = column.relation as ColumnRelationLink;
-      const src = path.dirname(
-        relation.child.model.destination(destination)
-      );
-      let dst = relation.parent.model.destination(destination);
-      const ext = path.extname(dst);
-      if (ext.length) {
-        dst = dst.substring(0, dst.length - ext.length);
-      }
       //import type { Profile } from '../profile/types';
       source.addImportDeclaration({
         isTypeOnly: true,
-        moduleSpecifier: path.relative(src, dst),
+        moduleSpecifier: relativeImport(
+          relation.child.model.destination(destination),
+          relation.parent.model.destination(destination)
+        ),
         namedImports: [ relation.parent.model.title ]
       });
     });
@@ -42,20 +38,53 @@ export default function generateModel(
     model.fieldsets.forEach(column => {
       if (imported.includes(column.type)) return;
       imported.push(column.type);
+      //get the fieldset
       const fieldset = column.fieldset as Fieldset;
-      const src = path.dirname(model.destination(destination));
-      let dst = fieldset.destination(destination);
-      const ext = path.extname(dst);
-      if (ext.length) {
-        dst = dst.substring(0, dst.length - ext.length);
-      }
       //import type { Profile } from '../profile/types';
       source.addImportDeclaration({
         isTypeOnly: true,
-        moduleSpecifier: path.relative(src, dst),
+        moduleSpecifier: relativeImport(
+          model.destination(destination),
+          fieldset.destination(destination)
+        ),
         namedImports: [ fieldset.title ]
       });
     });
+  }
+
+  const imports: string[] = [];
+  //if there is an enum output path
+  if (typeof enums === 'string') {
+    //loop through enums
+    model.enums.forEach(column => {
+      if (imported.includes(column.type)) return;
+      imported.push(column.type);
+      //if enum output path is dynamic
+      if (enums.includes('[name]')) {
+        //import Roles from '../profile/enum.ts';
+        source.addImportDeclaration({
+          isTypeOnly: true,
+          moduleSpecifier: relativeImport(
+            model.destination(destination),
+            enums.replace('[name]', column.type.toLowerCase())
+          ),
+          defaultImport: column.type
+        });
+      } else {
+        imports.push(column.type);
+      }
+    });
+    if (imports.length > 0 && enums !== destination) {
+      //import { Roles, .. } from '../enums.ts';
+      source.addImportDeclaration({
+        isTypeOnly: true,
+        moduleSpecifier: relativeImport(
+          model.destination(destination),
+          enums
+        ),
+        namedImports: imports
+      });
+    }
   }
   //export type Profile
   source.addTypeAlias({
@@ -64,12 +93,12 @@ export default function generateModel(
     type: formatCode(`{
       ${model.columns.filter(
         //filter out columns that are not in the model map
-        column => !!map[column.type]
+        column => !!map[column.type] || !!column.enum
       ).map(column => (
         //name?: string
         `${column.name}${
           !column.required ? '?' : ''
-        }: ${map[column.type]}${
+        }: ${map[column.type] || column.type}${
           column.multiple ? '[]' : ''
         }`
       )).join(',\n')}
@@ -104,6 +133,8 @@ export default function generateModel(
     .filter(column => [
       //should be a name on the map
       ...Object.keys(map),
+      //...also include enum names
+      ...model.enums.map(column => column.type),
       //...also include fieldset names
       ...model.fieldsets.map(column => column.fieldset?.title)
     ].includes(column.type));
