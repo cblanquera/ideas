@@ -1,6 +1,7 @@
+import type { SourceFile } from 'ts-morph';
 //project
-import { SourceFile } from 'ts-morph';
 import { Fieldset } from '@blanquera/idea-spec';
+import type { Projects } from '../types';
 //helpers
 import { map, relativeImport, formatCode } from '../helpers';
 
@@ -10,12 +11,11 @@ import { map, relativeImport, formatCode } from '../helpers';
 export default function generateFieldset(
   source: SourceFile, 
   fieldset: Fieldset, 
-  destination: string,
-  enums?: string
+  projects: Projects
 ) {
   const imported: string[] = [];
   //if split files, we should import
-  if (destination.includes('[name]')) {
+  if (projects.types.output.includes('[name]')) {
     //loop through the fieldsets
     fieldset.fieldsets.forEach(column => {
       if (imported.includes(column.type)) return;
@@ -25,8 +25,8 @@ export default function generateFieldset(
       source.addImportDeclaration({
         isTypeOnly: true,
         moduleSpecifier: relativeImport(
-          fieldset.destination(destination),
-          child.destination(destination)
+          fieldset.destination(projects.types.output),
+          child.destination(projects.types.output)
         ),
         namedImports: [ child.title ]
       });
@@ -35,19 +35,22 @@ export default function generateFieldset(
 
   const imports: string[] = [];
   //if there is an enum output path
-  if (typeof enums === 'string') {
+  if (projects.enums) {
     //loop through enums
     fieldset.enums.forEach(column => {
       if (imported.includes(column.type)) return;
       imported.push(column.type);
       //if enum output path is dynamic
-      if (enums.includes('[name]')) {
-        //import Roles from '../profile/enum.ts';
+      if (projects.enums.output.includes('[name]')) {
+        //import Roles from '../profile/enum';
         source.addImportDeclaration({
           isTypeOnly: true,
           moduleSpecifier: relativeImport(
-            fieldset.destination(destination),
-            enums.replace('[name]', column.type.toLowerCase())
+            fieldset.destination(projects.types.output),
+            projects.enums.output.replace(
+              '[name]', 
+              column.type.toLowerCase()
+            )
           ),
           defaultImport: column.type
         });
@@ -56,13 +59,13 @@ export default function generateFieldset(
       }
     });
 
-    if (imports.length > 0 && enums !== destination) {
-      //import { Roles, .. } from '../enums.ts';
+    if (imports.length > 0 && projects.enums.output !== projects.types.output) {
+      //import { Roles, .. } from '../enums';
       source.addImportDeclaration({
         isTypeOnly: true,
         moduleSpecifier: relativeImport(
-          fieldset.destination(destination),
-          enums
+          fieldset.destination(projects.types.output),
+          projects.enums.output
         ),
         namedImports: imports
       });

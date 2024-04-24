@@ -12,7 +12,8 @@ import {
   lowerize, 
   capitalize, 
   camelize, 
-  deconstruct 
+  enval,
+  ensolute 
 } from './helpers';
 
 export {
@@ -23,5 +24,6 @@ export {
   lowerize, 
   capitalize, 
   camelize, 
-  deconstruct
+  enval,
+  ensolute 
 };

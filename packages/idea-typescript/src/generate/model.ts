@@ -1,7 +1,8 @@
 //types
+import type { SourceFile } from 'ts-morph';
 import type { ColumnRelationLink } from '@blanquera/idea-spec';
+import type { Projects } from '../types';
 //project
-import { SourceFile } from 'ts-morph';
 import { Model, Fieldset } from '@blanquera/idea-spec';
 //helpers
 import { map, relativeImport, formatCode } from '../helpers';
@@ -12,12 +13,11 @@ import { map, relativeImport, formatCode } from '../helpers';
 export default function generateModel(
   source: SourceFile, 
   model: Model, 
-  destination: string,
-  enums?: string
+  projects: Projects
 ) {
   const imported: string[] = [];
   //if split files, we should import
-  if (destination.includes('[name]')) {
+  if (projects.types.output.includes('[name]')) {
     //loop through the relation
     model.relations.forEach(column => {
       if (imported.includes(column.type)) return;
@@ -28,8 +28,8 @@ export default function generateModel(
       source.addImportDeclaration({
         isTypeOnly: true,
         moduleSpecifier: relativeImport(
-          relation.child.model.destination(destination),
-          relation.parent.model.destination(destination)
+          relation.child.model.destination(projects.types.output),
+          relation.parent.model.destination(projects.types.output)
         ),
         namedImports: [ relation.parent.model.title ]
       });
@@ -44,8 +44,8 @@ export default function generateModel(
       source.addImportDeclaration({
         isTypeOnly: true,
         moduleSpecifier: relativeImport(
-          model.destination(destination),
-          fieldset.destination(destination)
+          model.destination(projects.types.output),
+          fieldset.destination(projects.types.output)
         ),
         namedImports: [ fieldset.title ]
       });
@@ -53,20 +53,23 @@ export default function generateModel(
   }
 
   const imports: string[] = [];
-  //if there is an enum output path
-  if (typeof enums === 'string') {
+  //if there is an enum project
+  if (projects.enums) {
     //loop through enums
     model.enums.forEach(column => {
       if (imported.includes(column.type)) return;
       imported.push(column.type);
       //if enum output path is dynamic
-      if (enums.includes('[name]')) {
-        //import Roles from '../profile/enum.ts';
+      if (projects.enums.output.includes('[name]')) {
+        //import Roles from '../profile/enum';
         source.addImportDeclaration({
           isTypeOnly: true,
           moduleSpecifier: relativeImport(
-            model.destination(destination),
-            enums.replace('[name]', column.type.toLowerCase())
+            model.destination(projects.types.output),
+            projects.enums.output.replace(
+              '[name]', 
+              column.type.toLowerCase()
+            )
           ),
           defaultImport: column.type
         });
@@ -74,13 +77,13 @@ export default function generateModel(
         imports.push(column.type);
       }
     });
-    if (imports.length > 0 && enums !== destination) {
-      //import { Roles, .. } from '../enums.ts';
+    if (imports.length > 0 && projects.enums.output !== projects.types.output) {
+      //import { Roles, .. } from '../enums';
       source.addImportDeclaration({
         isTypeOnly: true,
         moduleSpecifier: relativeImport(
-          model.destination(destination),
-          enums
+          model.destination(projects.types.output),
+          projects.enums.output
         ),
         namedImports: imports
       });

@@ -1,10 +1,8 @@
 //types
-import type { Terminal } from '@ossph/idea';
+import type { Projects } from '../types';
 //project
-import path from 'path';
-import { Project, SourceFile, IndentationText } from 'ts-morph';
-import { Loader } from '@ossph/idea';
-import { Model, Fieldset, deconstruct } from '@blanquera/idea-spec';
+import { SourceFile } from 'ts-morph';
+import { Model, Fieldset } from '@blanquera/idea-spec';
 //generators
 import generateModel from './model';
 import generateFieldset from './fieldset';
@@ -12,112 +10,47 @@ import generateFieldset from './fieldset';
 /**
  * This is the The params comes form the cli
  */
-export default function generate(
-  out: string, 
-  lang: string, 
-  cli: Terminal,
-  enums?: string
-) {
-  //first check enums
-  let edestination: string|undefined;
-  if (typeof enums === 'string') {
-    const output = deconstruct<string>(enums);
-    // /FULL_PATH/modules/enums.ts"
-    // /FULL_PATH/modules/[name].ts"
-    // /FULL_PATH/modules/enums/[name].ts"
-    edestination = output.type === 'env' 
-      ? process.env[output.value]
-      : Loader.absolute(output.value, cli.cwd);
-    if (typeof edestination !== 'string') {
-      return cli.terminal.error('Enums path is invalid');
-    }
-  }
-  //types "modules/types.ts"
-  //types "modules/[name]/types.ts"
-  //types "./modules/types.ts"
-  //types "./modules/[name]/types.ts"
-  //types "../modules/types.ts"
-  //types "../modules/[name]/types.ts"
-  //types "env(OUTPUT)"
-  const output = deconstruct<string>(out);
-  // /FULL_PATH/modules/types.ts"
-  // /FULL_PATH/modules/[name]/types.ts"
-  // /FULL_PATH/modules/types/[name].ts"
-  const destination = output.type === 'env' 
-    ? process.env[output.value]
-    : Loader.absolute(output.value, cli.cwd);
-  if (typeof destination !== 'string') {
-    return cli.terminal.error('Types path is invalid');
-  }
-  // /FULL_PATH/modules
-  const outDir = destination.includes(`${path.sep}[name]`) 
-    ? destination.split(`${path.sep}[name]`)[0]
-    : destination.includes('[name]') 
-    ? destination.split('[name]')[0]
-    : path.dirname(destination);
-  //determine outfile
-  const outFile = destination.split(outDir)[1].startsWith('/')
-    //cannot have leading slash (will error)
-    ? destination.split(outDir)[1].substring(1)
-    : destination.split(outDir)[1];
-  //set up the ts-morph project
-  const project = new Project({
-    tsConfigFilePath: path.resolve(__dirname, '../../tsconfig.json'),
-    skipAddingFilesFromTsConfig: true,
-    compilerOptions: {
-      outDir: outDir,
-      // Generates corresponding '.d.ts' file.
-      declaration: true, 
-      // Generates a sourcemap for each corresponding '.d.ts' file.
-      declarationMap: true, 
-      // Generates corresponding '.map' file.
-      sourceMap: true, 
-    },
-    manipulationSettings: {
-      indentationText: IndentationText.TwoSpaces
-    }
-  });
-  //create the output directory if not exists
-  const root = project.createDirectory(outDir);
+export default function generate(projects: Projects) {
   //check if we need to split types by files 
   //or put it into one singular file
-  const split = destination.includes('[name]');
+  const split = projects.types.output.includes('[name]');
   //determine outfile
   //get master source file
-  const master = !split 
-    ? root.createSourceFile(outFile, '', { overwrite: true })
+  const master = projects.types.file 
+    ? projects.types.file
+    : !split 
+    ? projects.types.source.createSourceFile(
+        projects.types.filename, 
+        '', 
+        { overwrite: true }
+      )
     : null;
   //loop through models
   for (const name in Model.configs) {
     //get the model
     const model = new Model(name);
-    //get the final path
-    const path = model.destination(outFile);
     //determine the source file
-    const source = split 
-      ? root.createSourceFile(path, '', { overwrite: true })
-      : master as SourceFile;
+    const source = split? projects.types.source.createSourceFile(
+      //the final path
+      model.destination(projects.types.filename), 
+      '', 
+      { overwrite: true }
+    ): master as SourceFile;
     //generate the model
-    generateModel(source, model, destination, edestination);
+    generateModel(source, model, projects);
   }
   //loop through fieldsets
   for (const name in Fieldset.configs) {
     //get the fieldset
     const fieldset = new Fieldset(name);
-    //get the final path
-    const path = fieldset.destination(outFile);
     //determine the source file
-    const source = split 
-      ? root.createSourceFile(path, '', { overwrite: true })
-      : master as SourceFile;
+    const source = split? projects.types.source.createSourceFile(
+      //the final path
+      fieldset.destination(projects.types.filename), 
+      '', 
+      { overwrite: true }
+    ): master as SourceFile;
     //generate the fieldset
-    generateFieldset(source, fieldset, destination, edestination);
-  }
-  //if you want ts, tsx files
-  if (lang === 'ts') {
-    project.saveSync();
-  //if you want js, d.ts files
-  } else {
-    project.emit();
+    generateFieldset(source, fieldset, projects);
   }
 };

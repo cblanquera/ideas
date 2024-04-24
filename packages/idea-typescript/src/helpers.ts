@@ -23,7 +23,9 @@ export function relativeImport(source: string, importing: string): string {
   if (extname.length) {
     importing = importing.substring(0, importing.length - extname.length);
   }
-  return path.relative(path.dirname(source), importing);
+
+  const relative = path.relative(path.dirname(source), importing);
+  return relative.startsWith('.') ? relative: `./${relative}`;
 }
 
 /**

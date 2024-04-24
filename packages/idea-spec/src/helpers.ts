@@ -1,4 +1,5 @@
 import type { Data } from '@ossph/idea';
+import { Loader } from '@ossph/idea';
 
 export const toValidator: Record<string, string> = {
   String: 'string',
@@ -54,10 +55,11 @@ export function lowerize(word: string) {
 }
 
 /**
+ * Returns the actual value even if it is an environment variable
  * ex. output "./modules/types.ts"
  * ex. output "env(OUTPUT)"
  */
-export const deconstruct = <T = Data>(value: Data) => {
+export function enval<T = Data>(value: Data) {
   const string = (value || '').toString();
   const type = string.indexOf('env(') === 0 ? 'env': 'literal';
   const deconstructed = type === 'env' 
@@ -65,3 +67,13 @@ export const deconstruct = <T = Data>(value: Data) => {
     : value as T;
   return { type, value: deconstructed };
 };
+
+/**
+ * Returns the absolute path of a file considering environment variables
+ */
+export function ensolute(output: string, cwd: string) {
+  const path = enval<string>(output);
+  return path.type === 'env' 
+    ? process.env[path.value]
+    : Loader.absolute(path.value, cwd);
+}
