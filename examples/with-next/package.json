@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "transform": "idea -i ./schema.idea",
+    "transform": "idea -i ./main.idea",
     "push": "dotenv -e .env.local -- drizzle-kit push:pg",
     "migrate": "dotenv -e .env.local -- drizzle-kit generate:pg"
   },
@@ -25,7 +25,6 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@blanquera/idea-typescript": "0.1.0",
     "@types/better-sqlite3": "7.6.9",
     "@types/node": "20.11.16",
     "@types/react": "18.2.51",
@@ -35,6 +34,8 @@
     "drizzle-kit": "0.20.14",
     "eslint": "8.56.0",
     "eslint-config-next": "14.1.0",
+    "idea-assert": "0.1.0",
+    "idea-ts": "0.1.0",
     "postcss": "8.4.33",
     "tailwindcss": "3.4.1",
     "ts-node": "10.9.2",

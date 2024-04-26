@@ -4,25 +4,25 @@ import type { Projects } from './types';
 //project
 import path from 'path';
 import { Project, IndentationText } from 'ts-morph';
-import { Model, Fieldset, Enum, ensolute } from '@blanquera/idea-spec';
+import { Model, Fieldset, Enum, ensolute } from 'idea-spec';
 //transformers
 import enumGenerator from './generate/enums';
 import typeGenerator from './generate/types';
 
 // Sample idea config
-// plugin "@blanquera/idea-typescript" {
+// plugin "idea-ts" {
 //   lang "ts"
 //   enums "./modules/enums"
 //   types "./modules/types"
 // }
 // or 
-// plugin "@blanquera/idea-typescript" {
+// plugin "idea-ts" {
 //   lang "ts"
 //   enums "./modules/[name]"
 //   types "./modules/[name]/types"
 // }
 // or 
-// plugin "@blanquera/idea-typescript" {
+// plugin "idea-ts" {
 //   lang "ts"
 //   enums "env(ENUMS)"
 //   types "env(TYPES)"

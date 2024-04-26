@@ -2,7 +2,7 @@
 import type { Projects } from '../types';
 //project
 import { SourceFile } from 'ts-morph';
-import { Model, Fieldset } from '@blanquera/idea-spec';
+import { Model, Fieldset } from 'idea-spec';
 //generators
 import generateModel from './model';
 import generateFieldset from './fieldset';

@@ -1,8 +1,14 @@
-plugin "@blanquera/idea-typescript" {
+plugin "idea-ts" {
   lang "ts"
-  enums "./modules/enums.ts"
-  types "./modules/[name]/types.ts"
+  enums "./modules/enums"
+  types "./modules/[name]/types"
 }
+
+plugin "idea-assert" {
+  output "./modules/[name]/assert"
+}
+
+use "./more.idea"
 
 //--------------------------------------------------------------------//
 // User System
@@ -145,12 +151,6 @@ model Auth @label("Auth" "Auths") @suggested("[username]") @icon("lock") {
 // ie. company, network, group, organization, etc.
 // to do a company setup, make a company profile, then add members to it.
 
-enum Roles {
-  OWNER "owner"
-  MODERATOR "moderator"
-  MEMBER "member"
-}
-
 model Connection @label("Connection" "Connections") @suggested("[owner.name] - [member.name]") @icon("users") {
   ownerId  String   @label("Owner")
                     @id @relation("Profile" "id") 
@@ -232,95 +232,4 @@ model File @label("File" "Files") @suggested("[name]") @icon("file") {
                      @view.date("m d, Y h:iA")
   
   profile   Profile  @relation({ local "profileId" foreign "id" })
-}
-
-//--------------------------------------------------------------------//
-// Address System
-
-type Address @label("Address" "Addresses") @suggested("[name]") @icon("map-marker") {
-  name         String   @label("Name") 
-                        @field.text
-                        @is.required("Name is required")
-                        @list.detail @view.text
-  
-  contact      Contact  @label("Contact")
-
-  email        String?  @label("Contact Email Address") 
-                        @field.email
-                        @is.email("Should be a valid email address")
-                        @view.email
-  
-  phone        String?  @label("Contact Phone Number") 
-                        @field.text
-                        @is.pattern("/^\+[0-9]{0,3} [0-9]+$/" "Should be a valid phone number")
-                        @view.phone
-  
-  unit         String?  @label("Unit Number")
-                        @field.text
-                        @list.text @view.text
-  
-  building     String?  @label("Building Name")
-                        @field.text
-                        @list.text @view.text
-  
-  street       String   @label("Street Address")
-                        @field.text
-                        @is.required("Street is required")
-                        @list.text @view.text
-  
-  neighborhood String?  @label("Neighborhood")
-                        @field.text
-                        @list.text @view.text
-  
-  city         String   @label("City")
-                        @filterable
-                        @field.text
-                        @is.required("City is required")
-                        @list.text @view.text
-  
-  state        String?  @label("State")
-                        @filterable
-                        @field.text
-                        @list.text @view.text
-  
-  region       String?  @label("Region")
-                        @filterable
-                        @field.text
-                        @list.text @view.text
-  
-  country      String   @label("Country")
-                        @filterable
-                        @field.country
-                        @is.required("Country is required")
-                        @list.text @view.text
-  
-  postal       String   @label("Postal Code")
-                        @filterable
-                        @field.text
-                        @is.required("Postal Code is required")
-                        @list.text @view.text
-
-  notes        String?  @label("Notes")
-                        @field.textarea
-                        @view.text
-  
-  latitude     Float?   @label("Latitude")
-  longitude    Float?   @label("Longitude")
-}
-
-type Contact @label("Contact" "Contacts") @suggested("[name]") @icon("map-marker") {
-  name         String   @label("Name") 
-                        @field.text
-                        @is.required("Name is required")
-                        @list.detail @view.text
-  
-  email        String?  @label("Email Address") 
-                        @field.email
-                        @is.email("Should be a valid email address")
-                        @view.email
-  
-  phone        String?  @label("Phone Number") 
-                        @field.text
-                        @is.pattern("/^\+[0-9]{0,3} [0-9]+$/" "Should be a valid phone number")
-                        @view.phone
 }

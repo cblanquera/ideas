@@ -30,6 +30,95 @@ export class Column {
   }
 
   /**
+   * Returns the column assertions
+   */
+  public get assertions() {
+    const assertions: {
+      method: string,
+      args: Data[],
+      message: string|null
+    }[] = [];
+
+    //if column is system generated
+    if (this.generated) {
+      //then there is no need to validate
+      return assertions;
+    }
+
+    //explicit validators
+    for (const name in this.attributes) {
+      if (!name.startsWith('is.')) {
+        continue;
+      }
+      //we found it.
+      const field = this.attributes[name];
+      //get the method
+      const method = name.replace('is.', '');
+      //get the arguments
+      const args: Data[] = Array.isArray(field)? field as Data[]: [];
+      //the last argument is the message
+      const message = typeof args[args.length - 1] !== 'string' 
+        ? args.pop() as string
+        : null;
+        assertions.push({ method, args, message });
+    }
+
+    //implied validators
+    // String, Text,    Number, Integer, 
+    // Float,  Boolean, Date,   Datetime, 
+    // Time,   Json,    Object, Hash
+    for (const type in toValidator) {
+      if (this.type === type) {
+        if (this.multiple) {
+          if (!assertions.find(v => v.method === 'array')) {
+            assertions.unshift({ 
+              method: 'array', 
+              args: [ toValidator[type] ], 
+              message: 'Invalid format'
+            });
+          }
+        } else if (!assertions.find(v => v.method === toValidator[type])) {
+          assertions.unshift({ 
+            method: toValidator[type], 
+            args: [], 
+            message: 'Invalid format'
+          });
+        }
+      }
+    }
+    // - enum
+    if (this.enum && !assertions.find(v => v.method === 'option')) {
+      assertions.unshift({ 
+        method: 'option', 
+        args: Object.values(this.enum), 
+        message: 'Invalid option'
+      });
+    }
+    // - unique
+    if (this.unique) {
+      if (!assertions.find(v => v.method === 'unique')) {
+        assertions.unshift({ 
+          method: 'unique', 
+          args: [], 
+          message: 'Already exists'
+        });
+      }
+    }
+    // - required
+    if (this.required && typeof this.default === undefined) {
+      if (!assertions.find(v => v.method === 'required')) {
+        assertions.unshift({ 
+          method: 'required', 
+          args: [], 
+          message: `${this._config.name} is required`
+        });
+      }
+    }
+
+    return assertions;
+  }
+
+  /**
    * Returns the column attributes
    * example: @foo @bar() ...
    */
@@ -344,87 +433,6 @@ export class Column {
   }
 
   /**
-   * Returns the column validators
-   */
-  public get validators() {
-    const validators: {
-      method: string,
-      args: Data[],
-      message: string|null
-    }[] = [];
-
-    //if column is system generated
-    if (this.generated) {
-      //then there is no need to validate
-      return validators;
-    }
-
-    //explicit validators
-    for (const name in this.attributes) {
-      if (!name.startsWith('view.')) {
-        continue;
-      }
-      //we found it.
-      const field = this.attributes[name];
-      //get the method
-      const method = name.replace('view.', '');
-      //get the arguments
-      const args: Data[] = Array.isArray(field)? field as Data[]: [];
-      //the last argument is the message
-      const message = typeof args[args.length - 1] !== 'string' 
-        ? args.pop() as string
-        : null;
-      validators.push({ method, args, message });
-    }
-
-    //implied validators
-    // String, Text,    Number, Integer, 
-    // Float,  Boolean, Date,   Datetime, 
-    // Time,   Json,    Object, Hash
-    for (const type in toValidator) {
-      if (this.type === type) {
-        if (this.multiple) {
-          if (!validators.find(v => v.method === 'array')) {
-            validators.unshift({ 
-              method: 'array', 
-              args: [ toValidator[type] ], 
-              message: 'Invalid format'
-            });
-          }
-        } else if (!validators.find(v => v.method === toValidator[type])) {
-          validators.unshift({ 
-            method: toValidator[type], 
-            args: [], 
-            message: 'Invalid format'
-          });
-        }
-      }
-    }
-    // - unique
-    if (this.unique) {
-      if (!validators.find(v => v.method === 'unique')) {
-        validators.unshift({ 
-          method: 'unique', 
-          args: [], 
-          message: 'Already exists'
-        });
-      }
-    }
-    // - required
-    if (this.required && typeof this.default === undefined) {
-      if (!validators.find(v => v.method === 'required')) {
-        validators.unshift({ 
-          method: 'required', 
-          args: [], 
-          message: `${this._config.name} is required`
-        });
-      }
-    }
-
-    return validators;
-  }
-
-  /**
    * Returns the column @view format (defaults to none)
    * example: @view.char({length 1})
    */
@@ -513,6 +521,13 @@ export class Fieldset {
    */
   protected _columns: Column[] = [];
 
+  /**
+   * Returns all the columns with assertions
+   */
+  public get assertions() {
+    return this.columns.filter(column => column.assertions.length > 0);
+  }
+  
   /**
    * Returns the schema attributes
    */

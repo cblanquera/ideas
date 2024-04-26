@@ -132,3 +132,6 @@ dist
 # examples
 examples/with-next/modules
 examples/with-express/modules
+
+# archives
+archives

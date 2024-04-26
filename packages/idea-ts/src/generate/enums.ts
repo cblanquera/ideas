@@ -2,7 +2,7 @@
 import type { Projects } from '../types';
 //project
 import { SourceFile } from 'ts-morph';
-import { Enum } from '@blanquera/idea-spec';
+import { Enum } from 'idea-spec';
 
 /**
  * This is the The params comes form the cli

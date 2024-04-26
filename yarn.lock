@@ -523,25 +523,25 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@ossph/idea-parser@0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@ossph/idea-parser/-/idea-parser-0.1.3.tgz#946c4f1a5b75ae0c614cbf6b419df86da6b469ae"
-  integrity sha512-QUNeY5UEbU1MCG51FlGf1TdfWoZ9hIjKKEmuVQBVshWS1xqpsLmyM4WWXQWyt7UTW6tATEWvWsQ9sQ9BcyOgqw==
+"@ossph/idea-parser@0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@ossph/idea-parser/-/idea-parser-0.1.5.tgz#51fd44368da6ca114c6f53100de8bffb27cee0e6"
+  integrity sha512-iB7hU88YLYP6waYrkXF8nyHd+pRKPbOlrueasVAWFXGp3A7Mx0rMKz+/GnfCdYx7hGAUjmaG0oz+nSyh5W43nw==
 
-"@ossph/idea-transformer@0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@ossph/idea-transformer/-/idea-transformer-0.1.3.tgz#a4189355ba023df2d1f3286939a5aac5828cf5ca"
-  integrity sha512-jFvQyM0hGZk9JGB1jtUtFtaz+Z6VJmU3wBdAnwbm6hd8gR1JBRx/lIdTDFwgWcPt+2Xs1JKm69g3ECe0U5dufA==
+"@ossph/idea-transformer@0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@ossph/idea-transformer/-/idea-transformer-0.1.5.tgz#7ed81cf1815ba6f7a763f90148b703d6301dd3f1"
+  integrity sha512-+UVKHKHriVtHfH7xLHtXQvQTlJcqzDPmume62hyFa5Bs8du9JQuPuXHGMBmZULSXMg63H25whNNHnZBhP/tedA==
   dependencies:
-    "@ossph/idea-parser" "0.1.3"
+    "@ossph/idea-parser" "0.1.5"
 
-"@ossph/idea@0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@ossph/idea/-/idea-0.1.3.tgz#f642f6628c95f2d7be47c45db4d873fd004ab384"
-  integrity sha512-ijMwzoQmZcRWzp5plKJJdSbjtXXSRCF5j2bm1YFx1E4Io4J7Jia7imKwO3l1WFSLC5iyqK99okbq2SyVhAAgiA==
+"@ossph/idea@0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@ossph/idea/-/idea-0.1.5.tgz#e8bb056da457c8800e7c5f990addd95031ebb517"
+  integrity sha512-M5I5RMIanmkT2gL4uPzM7PcIKvFWbzr8IrVHYRL2HLwos58xVxx+S+Bf4ybkkILt1HTuS/Lg2LMqByRgxUfHRw==
   dependencies:
-    "@ossph/idea-parser" "0.1.3"
-    "@ossph/idea-transformer" "0.1.3"
+    "@ossph/idea-parser" "0.1.5"
+    "@ossph/idea-transformer" "0.1.5"
 
 "@paralleldrive/cuid2@2.2.2":
   version "2.2.2"

@@ -1,5 +1,5 @@
 {
-  "name": "@blanquera/idea-typescript",
+  "name": "idea-ts",
   "version": "0.1.0",
   "license": "MIT",
   "description": "Idea transformer to Typescript types",
@@ -12,7 +12,7 @@
   },
   "main": "index.js",
   "dependencies": {
-    "@blanquera/idea-spec": "0.1.0"
+    "idea-spec": "0.1.0"
   },
   "devDependencies": {
     "@types/node": "20.11.16",

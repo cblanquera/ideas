@@ -1,5 +1,5 @@
 {
-  "name": "@blanquera/idea-spec",
+  "name": "idea-spec",
   "version": "0.1.0",
   "license": "MIT",
   "description": "Idea library for idea transformers",
@@ -13,7 +13,7 @@
   },
   "main": "index.js",
   "dependencies": {
-    "@ossph/idea": "0.1.4"
+    "@ossph/idea": "0.1.5"
   },
   "devDependencies": {
     "@types/chai": "4.3.5",
