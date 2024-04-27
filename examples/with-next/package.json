@@ -17,6 +17,7 @@
     "@planetscale/database": "1.16.0",
     "@vercel/postgres": "0.7.2",
     "better-sqlite3": "9.4.3",
+    "drizzle-orm": "0.30.9",
     "mysql2": "3.9.2",
     "next": "14.1.0",
     "postgres": "3.4.4",

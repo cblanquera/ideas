@@ -1617,6 +1617,11 @@ drizzle-kit@0.20.14:
     semver "^7.5.4"
     zod "^3.20.2"
 
+drizzle-orm@0.30.9:
+  version "0.30.9"
+  resolved "https://registry.yarnpkg.com/drizzle-orm/-/drizzle-orm-0.30.9.tgz#c5a4b6f4240bab99f54bf189a3ff2af4d97fdec8"
+  integrity sha512-VOiCFsexErmgqvNCOmbzmqDCZzZsHoz6SkWAjTFxsTr1AllKDbDJ2+GgedLXsXMDgpg/ljDG1zItIFeZtiO2LA==
+
 eastasianwidth@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/eastasianwidth/-/eastasianwidth-0.2.0.tgz#696ce2ec0aa0e6ea93a397ffcf24aa7840c827cb"

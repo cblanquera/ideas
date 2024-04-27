@@ -8,6 +8,14 @@ plugin "idea-assert" {
   output "./modules/[name]/assert"
 }
 
+plugin "idea-drizzle" {
+  lang "ts"
+  engine "pg"
+  url "env(DATABASE_URL)"
+  actions "./modules/[name]/actions"
+  store "./modules/store"
+}
+
 use "./more.idea"
 
 //--------------------------------------------------------------------//
