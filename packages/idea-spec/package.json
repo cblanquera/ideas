@@ -1,6 +1,6 @@
 {
   "name": "idea-spec",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "description": "Idea library for idea transformers",
   "author": "Chris <chris@incept.asia>",
@@ -12,6 +12,13 @@
     "test": "ts-mocha tests/*.test.ts"
   },
   "main": "index.js",
+  "files": [
+    "dist",
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "tsconfig.json"
+  ],
   "dependencies": {
     "@ossph/idea": "0.1.5"
   },

@@ -1,6 +1,6 @@
 {
   "name": "idea-drizzle",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "description": "Idea transformer to Drizzle",
   "author": "Chris <chris@incept.asia>",
@@ -19,8 +19,12 @@
     "tsconfig.json"
   ],
   "dependencies": {
-    "idea-assert": "0.1.0",
-    "idea-spec": "0.1.0"
+    "idea-assert": "0.1.1",
+    "idea-spec": "0.1.1",
+    "idea-ts": "0.1.1"
+  },
+  "peerDependencies": {
+    "drizzle-orm": "^0.30.0"
   },
   "devDependencies": {
     "@types/node": "20.11.16",

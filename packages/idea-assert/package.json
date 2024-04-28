@@ -1,6 +1,6 @@
 {
   "name": "idea-assert",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "description": "Idea transformer to Typescript types",
   "author": "Chris <chris@incept.asia>",
@@ -19,8 +19,8 @@
     "tsconfig.json"
   ],
   "dependencies": {
-    "idea-spec": "0.1.0",
-    "idea-ts": "0.1.0"
+    "idea-spec": "0.1.1",
+    "idea-ts": "0.1.1"
   },
   "devDependencies": {
     "@types/node": "20.11.16",
