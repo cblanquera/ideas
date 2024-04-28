@@ -17,6 +17,11 @@ plugin "idea-drizzle" {
   store "./modules/store"
 }
 
+plugin "idea-frui" {
+  lang "ts"
+  output "./modules/[name]/components"
+}
+
 use "./more.idea"
 
 //--------------------------------------------------------------------//

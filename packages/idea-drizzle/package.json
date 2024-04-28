@@ -12,6 +12,7 @@
   },
   "main": "index.js",
   "dependencies": {
+    "idea-assert": "0.1.0",
     "idea-spec": "0.1.0"
   },
   "devDependencies": {

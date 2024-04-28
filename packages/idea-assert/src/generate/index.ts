@@ -24,7 +24,6 @@ import generateMain from './main';
 
 /**
  * This is the The params comes form the cli
- * TODO: Enums, Unqiue
  */
 export default function generate({ config, schema, cli }: PluginWithCLIProps) {
   //we need idea-ts

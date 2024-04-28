@@ -16,6 +16,12 @@ export type ColumnRelationLink = {
   child: ColumnRelation
 };
 
+export type Component = {
+  method: string,
+  args: Data[],
+  attributes: Record<string, Data>
+}
+
 export class Column {
   //this is the raw column config collected from exma
   protected _config: ColumnConfig;
@@ -160,7 +166,7 @@ export class Column {
    * Returns the column field (defaults to none)
    * example: @field.text({type "text"})
    */
-  public get field() {
+  public get field(): Component {
     for (const name in this.attributes) {
       if (!name.startsWith('field.')) {
         continue;
@@ -172,7 +178,9 @@ export class Column {
       //get the arguments
       const args: Data[] = Array.isArray(field)? field as Data[]: [];
       //the first argument is the field attributes
-      const attributes = typeof args[0] === 'object' ? (args[0] || {}) : {};
+      const attributes = typeof args[0] === 'object' 
+        ? (args[0] || {}) as Record<string, Data>
+        : {};
      
       return { method, args, attributes };
     }
@@ -232,7 +240,7 @@ export class Column {
    * Returns the column list format (defaults to none)
    * example: @list.char({length 1})
    */
-  public get list() {
+  public get list(): Component {
     for (const name in this.attributes) {
       if (!name.startsWith('list.')) {
         continue;
@@ -244,7 +252,9 @@ export class Column {
       //get the arguments
       const args: Data[] = Array.isArray(field)? field as Data[]: [];
       //the first argument is the field attributes
-      const attributes = typeof args[0] === 'object' ? (args[0] || {}) : {};
+      const attributes = typeof args[0] === 'object' 
+        ? (args[0] || {}) as Record<string, Data>
+        : {};
      
       return { method, args, attributes };
     }
@@ -440,7 +450,7 @@ export class Column {
    * Returns the column @view format (defaults to none)
    * example: @view.char({length 1})
    */
-  public get view() {
+  public get view(): Component {
     for (const name in this.attributes) {
       if (!name.startsWith('view.')) {
         continue;
@@ -452,7 +462,9 @@ export class Column {
       //get the arguments
       const args: Data[] = Array.isArray(field)? field as Data[]: [];
       //the first argument is the field attributes
-      const attributes = typeof args[0] === 'object' ? (args[0] || {}) : {};
+      const attributes = typeof args[0] === 'object' 
+        ? (args[0] || {}) as Record<string, Data>
+        : {};
      
       return { method, args, attributes };
     }

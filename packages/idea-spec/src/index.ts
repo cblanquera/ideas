@@ -1,6 +1,11 @@
-import type { ColumnRelation, ColumnRelationLink } from './Model';
+import type { 
+  Component, 
+  ColumnRelation, 
+  ColumnRelationLink 
+} from './Model';
 
 export type {
+  Component,
   ColumnRelation,
   ColumnRelationLink
 }
