@@ -11,6 +11,13 @@
     "build": "tsc"
   },
   "main": "index.js",
+  "files": [
+    "dist",
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "tsconfig.json"
+  ],
   "dependencies": {
     "idea-assert": "0.1.0",
     "idea-spec": "0.1.0"
