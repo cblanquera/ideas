@@ -86,7 +86,7 @@ model Profile @label("Profile" "Profiles") @suggested("[name]") @icon("user") {
   connections Connection[] @label("Connections")
   memberships Connection[] @label("Memberships")
   files       File[]       @label("Files")
-  addresses   Address[]    @label("Addresses") @default("[]")
+  addresses   Address[]    @label("Addresses")
 }
 
 //Auth is used to authenticate a profile and create a session.

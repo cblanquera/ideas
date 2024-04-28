@@ -40,8 +40,12 @@ export class Column {
     }[] = [];
 
     //if column is system generated
-    if (this.generated) {
+    //if column is a relation to another model
+    //if column is related to another model
+    if (this.generated || this.relation || this.related) {
       //then there is no need to validate
+      //relation columns are not assertable
+      //related columns are not assertable
       return assertions;
     }
 
@@ -105,7 +109,7 @@ export class Column {
       }
     }
     // - required
-    if (this.required && typeof this.default === undefined) {
+    if (this.required && typeof this.default === 'undefined') {
       if (!assertions.find(v => v.method === 'required')) {
         assertions.unshift({ 
           method: 'required', 

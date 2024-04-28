@@ -31,11 +31,42 @@ export function body(fieldset: Fieldset) {
           ${error} = '${message}';
         }`;  
       });
-      return `//check ${column.name}
+
+      return assertions.length > 0 ? `//check ${column.name}
         if (typeof ${input} !== 'undefined') {
           ${assertions.join(' else ')}
-        }
-      `;
+        }`: '';
+    }).filter(code => code.length > 0).join('\n')}
+
+    ${fieldset.fieldsets.map(column => {
+      const fieldset = column.fieldset as Fieldset;
+      if (column.multiple) {
+        //errors.address = input.address.map(address.create).filter(Boolean);
+        //if (errors.address.length === 0) delete errors.address;
+        return `
+          if (typeof input.${column.name} !== 'undefined') {
+            //check ${column.name}
+            errors.${fieldset.camel} = input.${column.name}.map(${
+              fieldset.camel
+            }.create).filter(Boolean);
+            if (errors.${fieldset.camel}.length === 0) {
+              delete errors.${fieldset.camel};
+            }
+          }
+        `.trim();
+      } else {
+        //errors.address = create(input.address);
+        //if (!errors.address) delete errors.address;
+        return `
+          if (typeof input.${column.name} !== 'undefined') {
+            //check ${column.name}
+            errors.${fieldset.camel} = ${fieldset.camel}.create(input.${column.name});
+            if (!errors.${fieldset.camel}) {
+              delete errors.${fieldset.camel};
+            }
+          }
+        `.trim();
+      }
     }).join('\n')}
 
     return Object.keys(errors).length > 0 ? errors : null;

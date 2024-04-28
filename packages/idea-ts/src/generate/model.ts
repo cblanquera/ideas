@@ -97,7 +97,7 @@ export default function generateModel(
     type: formatCode(`{
       ${model.columns.filter(
         //filter out columns that are not in the model map
-        column => !!map[column.type] || !!column.enum
+        column => !!map[column.type] || !!column.enum || !!column.fieldset
       ).map(column => (
         //name?: string
         `${column.name}${
@@ -109,12 +109,12 @@ export default function generateModel(
     }`)
   });
   //export type ProfileExtended
-  if (model.relations.length || model.fieldsets.length) {
+  if (model.relations.length) {
     source.addTypeAlias({
       isExported: true,
       name: `${model.title}Extended`,
       type: formatCode(`${model.title} & {
-        ${[...model.relations, ...model.fieldsets].map(column => (
+        ${model.relations.map(column => (
           //user?: User
           `${column.name}${
             !column.required ? '?' : ''
@@ -150,8 +150,8 @@ export default function generateModel(
       ${inputs.map(column => (
         //name?: string
         `${column.name}${
-          !column.required ? '?' : ''
-        }: ${map[column.type]}${
+          !column.required || typeof column.default !== 'undefined' ? '?' : ''
+        }: ${map[column.type] || column.type}${
           column.multiple ? '[]' : ''
         }`
       )).join(',\n')}
@@ -164,7 +164,7 @@ export default function generateModel(
     type: formatCode(`{
       ${inputs.map(column => (
         //name?: string
-        `${column.name}?: ${map[column.type]}${
+        `${column.name}?: ${map[column.type] || column.type}${
           column.multiple ? '[]' : ''
         }`
       )).join(',\n')}

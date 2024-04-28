@@ -37,6 +37,17 @@ export default function generate(
         `${model.title}UpdateInput` 
       ]
     });
+    //import address from '[paths.assert]
+    model.fieldsets.forEach(column => {
+      const fieldset = column.fieldset as Fieldset;
+      file.addImportDeclaration({
+        moduleSpecifier: Loader.relative(
+          model.destination(output),
+          fieldset.destination(output)
+        ),
+        defaultImport: `* as ${fieldset.camel}`
+      });
+    })
     //generate the model
     generateCreate(file, model);
     generateUpdate(file, model);
@@ -65,6 +76,17 @@ export default function generate(
         `${fieldset.title}UpdateInput` 
       ]
     });
+    //import address from '[paths.assert]
+    fieldset.fieldsets.forEach(column => {
+      const subfieldset = column.fieldset as Fieldset;
+      file.addImportDeclaration({
+        moduleSpecifier: Loader.relative(
+          fieldset.destination(output),
+          subfieldset.destination(output)
+        ),
+        defaultImport: `* as ${subfieldset.camel}`
+      });
+    })
     //generate the fieldset
     generateCreate(file, fieldset);
     generateUpdate(file, fieldset);

@@ -79,7 +79,7 @@ export default function generateFieldset(
     type: formatCode(`{
       ${fieldset.columns.filter(
         //filter out columns that are not in the map
-        column => !!map[column.type] || !!column.enum
+        column => !!map[column.type] || !!column.enum || !!column.fieldset
       ).map(column => (
         //name?: string
         `${column.name}${
@@ -91,28 +91,11 @@ export default function generateFieldset(
     }`)
   });
   //export type ProfileExtended
-  if (fieldset.fieldsets.length) {
-    source.addTypeAlias({
-      isExported: true,
-      name: `${fieldset.title}Extended`,
-      type: formatCode(`${fieldset.title} & {
-        ${fieldset.fieldsets.map(column => (
-          //user?: User
-          `${column.name}${
-            !column.required ? '?' : ''
-          }: ${column.type}${
-            column.multiple ? '[]' : ''
-          }`
-        )).join(',\n')}
-      }`)
-    });
-  } else {
-    source.addTypeAlias({
-      isExported: true,
-      name: `${fieldset.title}Extended`,
-      type: formatCode(fieldset.title)
-    });
-  }
+  source.addTypeAlias({
+    isExported: true,
+    name: `${fieldset.title}Extended`,
+    type: formatCode(fieldset.title)
+  });
   //gather all the field inputs
   const inputs = fieldset.columns
     .filter(column => !column.generated)
@@ -132,8 +115,8 @@ export default function generateFieldset(
       ${inputs.map(column => (
         //name?: string
         `${column.name}${
-          !column.required ? '?' : ''
-        }: ${map[column.type]}${
+          !column.required || typeof column.default !== 'undefined' ? '?' : ''
+        }: ${map[column.type] || column.type}${
           column.multiple ? '[]' : ''
         }`
       )).join(',\n')}
@@ -146,7 +129,7 @@ export default function generateFieldset(
     type: formatCode(`{
       ${inputs.map(column => (
         //name?: string
-        `${column.name}?: ${map[column.type]}${
+        `${column.name}?: ${map[column.type] || column.type}${
           column.multiple ? '[]' : ''
         }`
       )).join(',\n')}
