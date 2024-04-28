@@ -1,6 +1,5 @@
 //types
 import type { Directory } from 'ts-morph';
-import type { Terminal } from '@ossph/idea';
 import type { ProjectConfig } from '../../types';
 //generators
 import generateCreate, { body as createBody } from './create';
@@ -17,22 +16,17 @@ import {
   IndentationText, 
   VariableDeclarationKind 
 } from 'ts-morph';
-import { Model, ensolute } from 'idea-spec';
+import { Model } from 'idea-spec';
 import { map, formatCode } from '../../helpers';
 
-//actions "./modules/[name]/actions/[action]"
 //actions "./modules/[name]/actions"
 //actions "./modules/actions"
 
 //output "./modules/[name]/assert"
 //output "./modules/assert"
 
-export default function generate(config: ProjectConfig, cli: Terminal) {
-  const output = ensolute(config.paths.actions, cli.cwd);
-  if (typeof output !== 'string') {
-    return cli.terminal.error('Output path is invalid');
-  }
-  
+export default function generate(config: ProjectConfig) {
+  const output = config.paths.actions;
   // /FULL_PATH/modules
   const dirname = output.includes(`${path.sep}[name]`) 
     ? output.split(`${path.sep}[name]`)[0]

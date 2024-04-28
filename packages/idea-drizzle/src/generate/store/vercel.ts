@@ -38,6 +38,6 @@ export default function generate(source: SourceFile, config: ProjectConfig) {
   });
   //export { core, orm, resource, db };
   source.addExportDeclaration({
-    namedExports: [ 'core', 'orm', 'resource', 'db' ]
+    namedExports: [ 'core', 'orm', 'resource', 'schema', 'db' ]
   });
 };

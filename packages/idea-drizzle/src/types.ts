@@ -30,6 +30,7 @@ export type ProjectConfig = {
     types: string,
     assert: string,
     store: string,
+    schema: string,
     actions: string
   }
 };

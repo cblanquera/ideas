@@ -5,6 +5,7 @@ import type { ProjectConfig } from '../types';
 import { Model, ensolute, enval } from 'idea-spec';
 //generators
 import generateStore from './store';
+import generateSchema from './schema';
 import generateActions from './actions';
 
 // Sample idea config
@@ -13,17 +14,8 @@ import generateActions from './actions';
 //   lang "ts"
 //   engine "pg"
 //   url "env(DATABASE_URL)"
-//   actions "./modules/[name]/actions/[action]"
-//   store "./modules/store"
-// }
-//
-// or 
-//
-// plugin "idea-drizzle" {
-//   lang "ts"
-//   engine "pg"
-//   url "env(DATABASE_URL)"
 //   actions "./modules/[name]/actions"
+//   schema "./modules/[name]/schema"
 //   store "./modules/store"
 // }
 //
@@ -34,6 +26,7 @@ import generateActions from './actions';
 //   engine "pg"
 //   url "env(DATABASE_URL)"
 //   actions "./modules/actions"
+//   schema "./modules/schema"
 //   store "./modules/store"
 // }
 
@@ -54,8 +47,11 @@ export default function generate({ config, schema, cli }: PluginWithCLIProps) {
   }
   //if actions are set
   if (config.actions) {
+    //actions needs schema
+    if (!config.schema) {
+      return cli.terminal.error('Schema path is required');
     //actions need output from idea-assert
-    if (!schema.plugin?.['idea-assert'].output) {
+    } else if (!schema.plugin?.['idea-assert'].output) {
       return cli.terminal.error('idea-assert plugin is required');
     //need types from idea-ts
     } else if (!schema.plugin?.['idea-ts'].types) {
@@ -76,6 +72,9 @@ export default function generate({ config, schema, cli }: PluginWithCLIProps) {
   const paths = {
     actions: typeof config.actions === 'string'
       ? ensolute(config.actions as string, cli.cwd)
+      : undefined,
+    schema: typeof config.schema === 'string'
+      ? ensolute(config.schema as string, cli.cwd)
       : undefined,
     store: typeof config.store === 'string'
       ? ensolute(config.store as string, cli.cwd) as string
@@ -98,6 +97,10 @@ export default function generate({ config, schema, cli }: PluginWithCLIProps) {
     if (!paths.actions) {
       return cli.terminal.error('Actions path is invalid');
     }
+    //if schema is invalid
+    if (!paths.schema) {
+      return cli.terminal.error('Schema path is invalid');
+    }
     //actions need output from idea-assert
     if (!paths.assert) {
       return cli.terminal.error('Assert path is invalid');
@@ -112,6 +115,7 @@ export default function generate({ config, schema, cli }: PluginWithCLIProps) {
       types: string,
       assert: string,
       store: string,
+      schema: string,
       actions: string
     }
   };
@@ -122,8 +126,12 @@ export default function generate({ config, schema, cli }: PluginWithCLIProps) {
   }
   //at a bare minimum generate the store
   generateStore(project);
+  //if schema path is set
+  if (paths.schema) {
+    generateSchema(project);
+  }
   //if actions path is set
   if (paths.actions) {
-    generateActions(project, cli);
+    generateActions(project);
   }
 };

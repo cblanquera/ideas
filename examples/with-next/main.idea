@@ -13,6 +13,7 @@ plugin "idea-drizzle" {
   engine "pg"
   url "env(DATABASE_URL)"
   actions "./modules/[name]/actions"
+  schema "./modules/[name]/schema"
   store "./modules/store"
 }
 

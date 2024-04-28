@@ -1,9 +1,14 @@
 //types
 import type { ProjectConfig } from '../../types';
 //project
-import { Project, IndentationText } from 'ts-morph';
+import { 
+  Project, 
+  IndentationText, 
+  VariableDeclarationKind 
+} from 'ts-morph';
+import { Loader } from '@ossph/idea';
+import { Model } from 'idea-spec';
 //generators
-import generateSchema from './schema';
 import generateMysql from './mysql';
 import generateSqlite from './sqlite';
 import generatePostgres from './postgres';
@@ -37,11 +42,43 @@ export default function generate(config: ProjectConfig) {
     overwrite: true
   });
 
+  //collect schemas
+  if (config.paths.schema.includes('[name]')) {
+    Object.keys(Model.configs).map(name => {
+      const model = new Model(name);
+      //import profile from '[paths.schema]
+      file.addImportDeclaration({
+        moduleSpecifier: Loader.relative(
+          config.paths.store, 
+          model.destination(config.paths.schema)
+        ),
+        defaultImport: model.camel
+      });
+    });
+    //const schema = { auth, profile, connection };
+    file.addVariableStatement({
+      declarationKind: VariableDeclarationKind.Const,
+      declarations: [{
+        name: 'schema',
+        initializer: `{ ${Object.keys(Model.configs).map(name => {
+          const model = new Model(name);
+          return model.camel;
+        }).join(', ')} }`
+      }]
+    });
+  } else {
+    file.addImportDeclaration({
+      moduleSpecifier: Loader.relative(
+        config.paths.store, 
+        config.paths.schema
+      ),
+      defaultImport: 'schema'
+    });
+  }
+
   const engine = config.engine.type === 'env' 
     ? process.env[config.engine.value] 
     : config.engine.value;
-
-  generateSchema(file, config);
 
   switch (engine) {
     case 'neon':
