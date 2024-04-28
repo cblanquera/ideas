@@ -712,13 +712,6 @@ export class Model extends Fieldset {
   }
 
   /**
-   * Returns the column that will be used to toggle @active
-   */
-  public get active() {
-    return this.columns.find(column => column.attributes.active === true);
-  }
-
-  /**
    * Adds a config to the cache
    */
   public static add(config: ModelConfig|ModelConfig[]) {
@@ -741,6 +734,13 @@ export class Model extends Fieldset {
    */
   public static has(name: string) {
     return typeof this._configs[name] !== 'undefined';
+  }
+
+  /**
+   * Returns the column that will be used to toggle @active
+   */
+  public get active() {
+    return this.columns.find(column => column.attributes.active === true);
   }
 
   /**
